@@ -1,216 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>2025 Recap</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#ffd6e7,#ffeef5);
-  overflow:hidden;
-  font-family:"Quicksand", sans-serif;
-}
+  body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ffd6e7,#ffeef5);
+    overflow:hidden;
+    font-family:"Quicksand", sans-serif;
+  }
 
-.book{
-  position:relative;
-  width:500px;
-  height:650px;
-  perspective:2000px;
-}
+  /* responsive scale so it doesn't feel "zoomed out" */
+  :root{ --book-scale: 1; }
+  @media (min-width: 900px){ :root{ --book-scale: 1.35; } }
+  @media (min-width: 1200px){ :root{ --book-scale: 1.6; } }
+  @media (max-width: 600px){ :root{ --book-scale: 0.9; } }
 
-.stack{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:14px;
-  background:#f9c5d5;
-  transform:translate(12px,12px);
-  box-shadow:0 15px 25px rgba(0,0,0,0.15);
-}
-.stack::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:14px;
-  background:#f4a7bb;
-  transform:translate(12px,12px);
-  z-index:-1;
-}
+  .book{
+    position:relative;
+    width:500px;
+    height:650px;
+    perspective:2000px;
+    transform: scale(var(--book-scale));
+    transform-origin:center;
+  }
 
-.page{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:#fff1df; /* light-tan “night light” paper tone */
-  border-radius:14px;
-  box-shadow:0 25px 45px rgba(0,0,0,0.2);
-  transform-origin:left;
-  transition:transform 0.9s ease;
-  backface-visibility:hidden;
-  padding:40px;
-  box-sizing:border-box;
-  display:flex;
-  flex-direction:column;
-}
+  .stack{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:14px;
+    background:#f9c5d5;
+    transform:translate(12px,12px);
+    box-shadow:0 15px 25px rgba(0,0,0,0.15);
+  }
+  .stack::after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:14px;
+    background:#f4a7bb;
+    transform:translate(12px,12px);
+    z-index:-1;
+  }
 
-.page.flipped{
-  transform:rotateY(-180deg);
-}
+  .page{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#fff1df; /* light-tan night light paper */
+    border-radius:14px;
+    box-shadow:0 25px 45px rgba(0,0,0,0.2);
+    transform-origin:left;
+    transition:transform 0.9s ease;
+    backface-visibility:hidden;
+    padding:40px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+  }
 
-.cover{
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
+  .page.flipped{
+    transform:rotateY(-180deg);
+  }
 
-.cover h1{
-  font-family:"Playfair Display", serif;
-  font-size:48px;
-  color:#d63384;
-  margin-bottom:15px;
-}
-.cover h2{
-  font-size:24px;
-  color:#444;
-}
+  .cover{
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+  .cover h1{
+    font-family:"Playfair Display", serif;
+    font-size:48px;
+    color:#d63384;
+    margin-bottom:15px;
+  }
+  .cover h2{
+    font-size:24px;
+    color:#444;
+  }
 
-.page-number{
-  position:absolute;
-  bottom:18px;
-  right:28px;
-  font-size:14px;
-  color:#b85c7a;
-}
+  .page-number{
+    position:absolute;
+    bottom:18px;
+    right:28px;
+    font-size:14px;
+    color:#b85c7a;
+  }
 
-.page1{
-  font-family:"Playfair Display", serif;
-  font-size:34px;
-  font-weight:700;
-  color:#d63384;
-  text-align:center;
-  margin:auto;
-}
+  .page1{
+    font-family:"Playfair Display", serif;
+    font-size:34px;
+    font-weight:700;
+    color:#d63384;
+    text-align:center;
+    margin:auto;
+  }
 
-.toc-title{
-  font-family:"Playfair Display", serif;
-  font-size:34px;
-  color:#d63384;
-  margin-bottom:25px;
-  text-align:center;
-}
+  .toc-title{
+    font-family:"Playfair Display", serif;
+    font-size:34px;
+    color:#d63384;
+    margin-bottom:25px;
+    text-align:center;
+  }
+  .toc-list{
+    text-align:left;
+    width:100%;
+    max-width:320px;
+    line-height:2;
+    font-size:18px;
+    color:#444;
+    margin:auto;
+  }
+  .toc-list span{
+    float:right;
+    color:#d63384;
+    font-weight:600;
+  }
 
-.toc-list{
-  text-align:left;
-  width:100%;
-  max-width:320px;
-  line-height:2;
-  font-size:18px;
-  color:#444;
-  margin:auto;
-}
-.toc-list span{
-  float:right;
-  color:#d63384;
-  font-weight:600;
-}
+  /* STORY PAGES */
+  .story-header{ margin-bottom:10px; }
+  .story-title{
+    font-family:"Playfair Display", serif;
+    font-size:24px;
+    color:#d63384;
+  }
+  .story-date{
+    font-size:14px;
+    color:#b85c7a;
+    margin-top:4px;
+  }
 
-/* STORY PAGES */
-.story-header{ margin-bottom:10px; }
-.story-title{
-  font-family:"Playfair Display", serif;
-  font-size:24px;
-  color:#d63384;
-}
-.story-date{
-  font-size:14px;
-  color:#b85c7a;
-  margin-top:4px;
-}
+  /* more image space */
+  .story-top{
+    width:100%;
+    height:52%; /* increased from 45% */
+    margin:10px 0 12px 0;
+  }
+  .story-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:12px;
+    box-shadow:0 10px 22px rgba(0,0,0,0.15);
+  }
 
-.story-top{
-  width:100%;
-  height:45%;
-  margin:10px 0 12px 0;
-}
-.story-img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:12px;
-  box-shadow:0 10px 22px rgba(0,0,0,0.15);
-}
+  .story-bottom{ width:100%; flex:1; }
+  .story-text{
+    font-size:14.5px;
+    line-height:1.6;
+    color:#444;
+    text-align:left;
+  }
 
-.story-bottom{ width:100%; flex:1; }
-.story-text{
-  font-size:14.5px;
-  line-height:1.6;
-  color:#444;
-  text-align:left;
-}
+  /* END PAGE */
+  .end-page{
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+  .end-title{
+    font-family:"Playfair Display", serif;
+    font-size:40px;
+    color:#d63384;
+    margin:0 0 10px 0;
+  }
+  .end-sub{
+    font-size:20px;
+    color:#444;
+    font-weight:600;
+  }
 
-/* END PAGE */
-.end-page{
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
-.end-title{
-  font-family:"Playfair Display", serif;
-  font-size:40px;
-  color:#d63384;
-  margin:0 0 10px 0;
-}
-.end-sub{
-  font-size:20px;
-  color:#444;
-  font-weight:600;
-}
+  /* ARROWS */
+  .arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:26px;
+    cursor:pointer;
+    color:#d63384;
+    user-select:none;
+    transition:opacity 0.2s ease;
+  }
+  .arrow.left{ left:-40px; }
+  .arrow.right{ right:-40px; }
+  .arrow.hidden{
+    opacity:0;
+    pointer-events:none;
+  }
 
-/* ARROWS */
-.arrow{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:26px;
-  cursor:pointer;
-  color:#d63384;
-  user-select:none;
-  transition:opacity 0.2s ease;
-}
-.arrow.left{ left:-40px; }
-.arrow.right{ right:-40px; }
-
-.arrow.hidden{
-  opacity:0;
-  pointer-events:none;
-}
-
-/* HEARTS */
-.heart{
-  position:absolute;
-  color:#ff6fa5;
-  animation:float 6s linear infinite;
-  opacity:0.7;
-}
-@keyframes float{
-  from{ transform:translateY(0) scale(1); opacity:0.8; }
-  to{ transform:translateY(-900px) scale(1.6); opacity:0; }
-}
+  /* HEARTS */
+  .heart{
+    position:absolute;
+    color:#ff6fa5;
+    animation:float 6s linear infinite;
+    opacity:0.7;
+  }
+  @keyframes float{
+    from{ transform:translateY(0) scale(1); opacity:0.8; }
+    to{ transform:translateY(-900px) scale(1.6); opacity:0; }
+  }
 </style>
 </head>
 <body>
 
 <div class="book">
-
   <div class="stack"></div>
 
   <!-- PAGE 14 (CLOSING) -->
@@ -421,81 +426,70 @@ body{
 
   <div class="arrow left" id="prev">&#10094;</div>
   <div class="arrow right" id="next">&#10095;</div>
-
 </div>
 
 <script>
-const pages = [
-  document.getElementById("cover"),
-  document.getElementById("page1"),
-  document.getElementById("page2"),
-  document.getElementById("page3"),
-  document.getElementById("page4"),
-  document.getElementById("page5"),
-  document.getElementById("page6"),
-  document.getElementById("page7"),
-  document.getElementById("page8"),
-  document.getElementById("page9"),
-  document.getElementById("page10"),
-  document.getElementById("page11"),
-  document.getElementById("page12"),
-  document.getElementById("page13"),
-  document.getElementById("page14")
-];
+  const pages = [
+    document.getElementById("cover"),
+    document.getElementById("page1"),
+    document.getElementById("page2"),
+    document.getElementById("page3"),
+    document.getElementById("page4"),
+    document.getElementById("page5"),
+    document.getElementById("page6"),
+    document.getElementById("page7"),
+    document.getElementById("page8"),
+    document.getElementById("page9"),
+    document.getElementById("page10"),
+    document.getElementById("page11"),
+    document.getElementById("page12"),
+    document.getElementById("page13"),
+    document.getElementById("page14")
+  ];
 
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
 
-/*
-  current = index of the page currently on top (visible).
-  Clicking NEXT flips the current page away to reveal the next page beneath.
-  Therefore, we must NOT allow flipping the last page (page14),
-  otherwise you'd see "nothing" underneath.
-*/
-let current = 0;
+  let current = 0;
 
-function updateArrows(){
-  // Hide left arrow on cover
-  if(current === 0) prevBtn.classList.add("hidden");
-  else prevBtn.classList.remove("hidden");
+  function updateArrows(){
+    if(current === 0) prevBtn.classList.add("hidden");
+    else prevBtn.classList.remove("hidden");
 
-  // Hide right arrow on last page
-  if(current === pages.length - 1) nextBtn.classList.add("hidden");
-  else nextBtn.classList.remove("hidden");
-}
-
-nextBtn.onclick = () => {
-  if(current < pages.length - 1){
-    pages[current].classList.add("flipped");
-    current++;
-    updateArrows();
+    if(current === pages.length - 1) nextBtn.classList.add("hidden");
+    else nextBtn.classList.remove("hidden");
   }
-};
 
-prevBtn.onclick = () => {
-  if(current > 0){
-    current--;
-    pages[current].classList.remove("flipped");
-    updateArrows();
+  nextBtn.onclick = () => {
+    if(current < pages.length - 1){
+      pages[current].classList.add("flipped");
+      current++;
+      updateArrows();
+    }
+  };
+
+  prevBtn.onclick = () => {
+    if(current > 0){
+      current--;
+      pages[current].classList.remove("flipped");
+      updateArrows();
+    }
+  };
+
+  updateArrows();
+
+  function createHeart(){
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.bottom = "-20px";
+    heart.style.fontSize = (12 + Math.random()*18) + "px";
+    heart.style.animationDuration = (4 + Math.random()*3) + "s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),7000);
   }
-};
-
-// initialize
-updateArrows();
-
-/* floating hearts */
-function createHeart(){
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "❤";
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.bottom = "-20px";
-  heart.style.fontSize = (12 + Math.random()*18) + "px";
-  heart.style.animationDuration = (4 + Math.random()*3) + "s";
-  document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),7000);
-}
-setInterval(createHeart,500);
+  setInterval(createHeart,500);
 </script>
 
 </body>
