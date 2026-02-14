@@ -8,9 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+  html { -webkit-text-size-adjust: 100%; }
+
   body{
     margin:0;
-    height:100vh;
+    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -19,18 +21,28 @@
     font-family:"Quicksand", sans-serif;
   }
 
-  /* responsive scale so it doesn't feel "zoomed out" */
-  :root{ --book-scale: 1; }
-  @media (min-width: 900px){ :root{ --book-scale: 1.35; } }
-  @media (min-width: 1200px){ :root{ --book-scale: 1.6; } }
-  @media (max-width: 600px){ :root{ --book-scale: 0.9; } }
+  /* ===== Responsive sizing (fixes phone overflow + laptop tiny/zoom) ===== */
+  :root{
+    --book-w: clamp(320px, 42vw, 640px);
+    --book-h: clamp(440px, 56vw, 860px);
+    --page-pad: clamp(18px, 3.6vw, 40px);
+    --stack-shift: clamp(8px, 1.4vw, 12px);
+  }
+
+  @media (max-width: 600px){
+    :root{
+      --book-w: min(92vw, 440px);
+      --book-h: min(86vh, 680px);
+      --page-pad: 22px;
+    }
+  }
 
   .book{
     position:relative;
-    width:500px;
-    height:650px;
+    width:var(--book-w);
+    height:var(--book-h);
     perspective:2000px;
-    transform: scale(var(--book-scale));
+    transform:none;           /* remove scale-zoom behavior */
     transform-origin:center;
   }
 
@@ -40,7 +52,7 @@
     height:100%;
     border-radius:14px;
     background:#f9c5d5;
-    transform:translate(12px,12px);
+    transform:translate(var(--stack-shift), var(--stack-shift));
     box-shadow:0 15px 25px rgba(0,0,0,0.15);
   }
   .stack::after{
@@ -50,7 +62,7 @@
     height:100%;
     border-radius:14px;
     background:#f4a7bb;
-    transform:translate(12px,12px);
+    transform:translate(var(--stack-shift), var(--stack-shift));
     z-index:-1;
   }
 
@@ -58,21 +70,20 @@
     position:absolute;
     width:100%;
     height:100%;
-    background:#fff1df; /* light-tan night light paper */
+    background:#fff1df;
     border-radius:14px;
     box-shadow:0 25px 45px rgba(0,0,0,0.2);
     transform-origin:left;
     transition:transform 0.9s ease;
     backface-visibility:hidden;
-    padding:40px;
+    padding:var(--page-pad);
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
+    overflow:hidden;
   }
 
-  .page.flipped{
-    transform:rotateY(-180deg);
-  }
+  .page.flipped{ transform:rotateY(-180deg); }
 
   .cover{
     justify-content:center;
@@ -81,12 +92,12 @@
   }
   .cover h1{
     font-family:"Playfair Display", serif;
-    font-size:48px;
+    font-size:clamp(34px, 6vw, 52px);
     color:#d63384;
     margin-bottom:15px;
   }
   .cover h2{
-    font-size:24px;
+    font-size:clamp(18px, 3.5vw, 26px);
     color:#444;
   }
 
@@ -100,7 +111,7 @@
 
   .page1{
     font-family:"Playfair Display", serif;
-    font-size:34px;
+    font-size:clamp(22px, 4.8vw, 34px);
     font-weight:700;
     color:#d63384;
     text-align:center;
@@ -109,7 +120,7 @@
 
   .toc-title{
     font-family:"Playfair Display", serif;
-    font-size:34px;
+    font-size:clamp(22px, 4.8vw, 34px);
     color:#d63384;
     margin-bottom:25px;
     text-align:center;
@@ -119,7 +130,7 @@
     width:100%;
     max-width:320px;
     line-height:2;
-    font-size:18px;
+    font-size:clamp(14px, 2.8vw, 18px);
     color:#444;
     margin:auto;
   }
@@ -133,19 +144,18 @@
   .story-header{ margin-bottom:10px; }
   .story-title{
     font-family:"Playfair Display", serif;
-    font-size:24px;
+    font-size:clamp(18px, 3.6vw, 24px);
     color:#d63384;
   }
   .story-date{
-    font-size:14px;
+    font-size:clamp(12px, 2.6vw, 14px);
     color:#b85c7a;
     margin-top:4px;
   }
 
-  /* more image space */
   .story-top{
     width:100%;
-    height:52%; /* increased from 45% */
+    height:52%;
     margin:10px 0 12px 0;
   }
   .story-img{
@@ -156,12 +166,24 @@
     box-shadow:0 10px 22px rgba(0,0,0,0.15);
   }
 
-  .story-bottom{ width:100%; flex:1; }
+  .story-bottom{
+    width:100%;
+    flex:1;
+    min-height:0;      /* critical for mobile flex overflow */
+    overflow:auto;     /* keeps long text inside page */
+    padding-right:6px;
+  }
   .story-text{
-    font-size:14.5px;
-    line-height:1.6;
+    font-size:clamp(12px, 2.5vw, 14.5px);
+    line-height:1.55;
     color:#444;
     text-align:left;
+  }
+
+  @media (max-width: 600px){
+    .story-top{ height:44%; }
+    .story-text{ line-height:1.45; }
+    .page-number{ bottom:14px; right:18px; }
   }
 
   /* END PAGE */
@@ -172,12 +194,12 @@
   }
   .end-title{
     font-family:"Playfair Display", serif;
-    font-size:40px;
+    font-size:clamp(28px, 5.5vw, 44px);
     color:#d63384;
     margin:0 0 10px 0;
   }
   .end-sub{
-    font-size:20px;
+    font-size:clamp(16px, 3.5vw, 22px);
     color:#444;
     font-weight:600;
   }
@@ -195,6 +217,12 @@
   }
   .arrow.left{ left:-40px; }
   .arrow.right{ right:-40px; }
+
+  @media (max-width: 600px){
+    .arrow.left{ left:-28px; }
+    .arrow.right{ right:-28px; }
+  }
+
   .arrow.hidden{
     opacity:0;
     pointer-events:none;
@@ -213,6 +241,7 @@
   }
 </style>
 </head>
+
 <body>
 
 <div class="book">
